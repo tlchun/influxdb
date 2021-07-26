@@ -94,8 +94,7 @@ handle_call(_Request, _From, State) ->
 handle_cast({write, Points}, State = #state{write_protocol = WriteProtocol, batch_size = BatchSize, udp_socket = Socket, udp_opts = UDPOpts, http_opts = HTTPOpts}) ->
   NPoints = drain_points(BatchSize - length(Points), [Points]),
   case influxdb_line:encode(NPoints) of
-    {error, Reason} ->
-      logger:error("[InfluxDB] Encode ~p failed: ~p", [NPoints, Reason]);
+    {error, Reason} -> logger:error("[InfluxDB] Encode ~p failed: ~p", [NPoints, Reason]);
     Data ->
       case WriteProtocol of
         udp ->
